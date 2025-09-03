@@ -1,0 +1,14 @@
+docker-compose up -d
+docker exec -it nestjs_api_postgres psql -U admin_tpi  -d nest_api_db
+\dt
+\q
+docker volume rm postgres_data
+docker volume ls
+docker ps
+docker-compose down --volumes
+
+npm run migration:generate
+npm run migration:run
+npm run create:admin
+nest start
+ng serve 

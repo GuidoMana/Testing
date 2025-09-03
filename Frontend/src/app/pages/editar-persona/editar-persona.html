@@ -1,0 +1,115 @@
+<div class="container" id="EditarPersona-container">
+    <div class="container d-flex justify-content-center align-items-center vh-99">
+        <div class="card p-4" style="width: 800px;">
+            <h2 class="text-center mb-4">Editar Persona</h2>
+            @if (isLoading) {
+            <p class="text-center">Cargando datos de la persona...</p>
+            } @else if (errorMessage) {
+            <div class="alert alert-danger">{{ errorMessage }}</div>
+            } @else {
+            <form [formGroup]="editForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="row gx-5">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">NOMBRE</label>
+                            <input type="text" class="form-control" id="firstName" formControlName="firstName">
+                            @if (f['firstName'].invalid && (f['firstName'].dirty || f['firstName'].touched)) {
+                            <div class="text-danger small mt-1">
+                                @if (f['firstName'].errors?.['required']) { <span>El nombre es requerido.</span> }
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">APELLIDO</label>
+                            <input type="text" class="form-control" id="lastName" formControlName="lastName">
+                            @if (f['lastName'].invalid && (f['lastName'].dirty || f['lastName'].touched)) {
+                            <div class="text-danger small mt-1">
+                                @if (f['lastName'].errors?.['required']) { <span>El apellido es requerido.</span> }
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">EMAIL</label>
+                            <input type="email" class="form-control" id="email" formControlName="email">
+                            @if (f['email'].invalid && (f['email'].dirty || f['email'].touched)) {
+                            <div class="text-danger small mt-1">
+                                @if (f['email'].errors?.['required']) { <span>El email es requerido.</span> }
+                                @if (f['email'].errors?.['email']) { <span>El formato del email no es válido.</span> }
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">NUEVA CONTRASEÑA</label>
+                            <input type="password" class="form-control" id="password" formControlName="password"
+                                placeholder="Dejar en blanco para no cambiar">
+                            @if (f['password'].invalid && (f['password'].dirty || f['password'].touched)) {
+                            <div class="text-danger small mt-1">
+                                @if (f['password'].errors?.['minlength']) { <span>Debe tener al menos 6
+                                    caracteres.</span> }
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="birthDate" class="form-label">FECHA DE NACIMIENTO</label>
+                            <input type="date" class="form-control" id="birthDate" formControlName="birthDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="countryId" class="form-label">PAIS</label>
+                            <select class="form-select" id="countryId" formControlName="countryId">
+                                <option [ngValue]="null" disabled>
+                                    @if(isLoadingLocations) {Cargando...} @else {Seleccione un país}
+                                </option>
+                                @for(country of countries; track country.id) {
+                                <option [ngValue]="country.id">{{ country.name }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="provinceId" class="form-label">PROVINCIA</label>
+                            <select class="form-select" id="provinceId" formControlName="provinceId">
+                                <option [ngValue]="null" disabled>
+                                    @if(isLoadingLocations) {Cargando...} @else {Seleccione una provincia}
+                                </option>
+                                @for(province of provinces; track province.id) {
+                                <option [ngValue]="province.id">{{ province.name }}</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cityId" class="form-label">LOCALIDAD</label>
+                            <select class="form-select" id="cityId" formControlName="cityId">
+                                <option [ngValue]="null" disabled>
+                                    @if(isLoadingLocations) {Cargando...} @else {Seleccione una localidad}
+                                </option>
+                                @for(city of cities; track city.id) {
+                                <option [ngValue]="city.id">{{ city.name }}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="role" class="form-label">ROL</label>
+                            <select class="form-select" id="role" formControlName="role">
+                                @for(role of roles; track role.value) {
+                                <option [value]="role.value">{{role.label}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="button" class="btn btn-primary w-50" routerLink="/TablaDeDatos">Atras</button>
+                    <button type="submit" class="btn btn-primary w-50" [disabled]="editForm.invalid || isLoading">
+                        @if(isLoading) { <span>Guardando...</span> } @else { <span>Guardar</span> }
+                    </button>
+                </div>
+            </form>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+# docker-compose.yml
+services:
+  postgres_db:
+    image: postgres:15
+    container_name: nestjs_api_postgres # Nombre del contenedor
+    restart: always # O 'unless-stopped'
+    environment:
+      # Usar los valores de .env o los defaults que coincidan con tu .env deseado
+      POSTGRES_USER: ${POSTGRES_USER:-admin_tpi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Gm1234%}
+      POSTGRES_DB: ${POSTGRES_DB:-nest_api_db}
+    ports:
+      # Mapea el puerto del host (definido en .env o 5433 por defecto aquí) al 5432 del contenedor
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistencia de datos
+    healthcheck:
+      # El healthcheck debe usar las mismas variables que el servicio para consistencia
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin_tpi} -d ${POSTGRES_DB:-nest_api_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data: # Define el volumen nombrado
+

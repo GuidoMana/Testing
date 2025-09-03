@@ -1,0 +1,20 @@
+/* src/app/components/header/header.component.css */
+:host {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    display: block;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mi-header-personalizado {
+    background-color: #1644A8;
+}
+
+:host ::ng-deep .navbar-text {
+    color: white;
+}

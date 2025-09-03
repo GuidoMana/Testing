@@ -1,0 +1,1079 @@
+{
+	"info": {
+		"_postman_id": "de00ad45-ce05-4b47-8fee-09ed5cb1ece1",
+		"name": "NestJS TPI API",
+		"description": "Colección de Postman para probar la API del TPI de NestJS.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43837754",
+		"_collection_link": "https://guidomana.postman.co/workspace/Guido-Mana's-Workspace~21e0bc14-6d7a-4b2d-8ab5-9ed60db7f8a3/collection/43837754-de00ad45-ce05-4b47-8fee-09ed5cb1ece1?action=share&source=collection_link&creator=43837754"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"guidomana@example.com\",\n    \"password\": \"Gg12345%\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Inicia sesión y obtiene una cookie JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Cierra la sesión limpiando la cookie JWT. Requiere estar autenticado."
+					},
+					"response": []
+				},
+				{
+					"name": "Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"status"
+							]
+						},
+						"description": "Verifica el estado de autenticación y devuelve la información del usuario si está autenticado."
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Carlos\",\r\n    \"lastName\": \"Perez\",\r\n    \"email\": \"carlos.perez@example.com\",\r\n    \"password\": \"PasswordSeguro123!\",\r\n    \"birthDate\": \"1995-08-20\",\r\n    \"cityName\": \"Villa María\",\r\n    \"provinceName\": \"Córdoba\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la autenticación."
+		},
+		{
+			"name": "Persons",
+			"item": [
+				{
+					"name": "Create Person",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Juan\",\n    \"lastName\": \"Fernandez\",\n    \"email\": \"juanpablo@example.com\",\n    \"password\": \"Jf12345$\",\n    \"birthDate\": \"1995-01-15\",\n    \"cityId\": 1,\n    \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/persons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons"
+							]
+						},
+						"description": "Crea una nueva persona. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Persons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/persons?page=1&limit=5&sortBy=id&sortOrder=DESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "id"
+								},
+								{
+									"key": "sortOrder",
+									"value": "DESC"
+								}
+							]
+						},
+						"description": "Obtiene todas las personas. Requiere rol ADMIN o MODERATOR."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Person by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/persons/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Obtiene una persona por su ID. Requiere rol ADMIN o MODERATOR (o lógica más fina)."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Persons by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/persons/search?name=a&sortBy=firstName&sortOrder=ASC&page=1&limit=6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "a"
+								},
+								{
+									"key": "sortBy",
+									"value": "firstName"
+								},
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "6"
+								}
+							]
+						},
+						"description": "Busca personas por nombre o apellido. Requiere rol ADMIN o MODERATOR."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Person (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Guido Alberto\",\n    \"lastName\": \"Mana\",\n    \"email\": \"guidomana.updated@example.com\",\n    \"birthDate\": \"1990-01-16\",\n    \"cityId\": 1,\n    \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/persons/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Reemplaza completamente una persona. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Person (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\": \"Mana Actualizado\",\n    \"newPassword\": \"NewSecurePassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/persons/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Actualiza parcialmente una persona. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Person",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/persons/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"persons",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Elimina una persona. Requiere rol ADMIN."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de personas (usuarios)."
+		},
+		{
+			"name": "Cities",
+			"item": [
+				{
+					"name": "Create City",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Villa María\",\n    \"latitude\": -32.4031012852999,\n    \"longitude\": -63.2366303163218,\n    \"provinceId\": 21 \n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							]
+						},
+						"description": "Crea una nueva ciudad. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities?page=2&limit=5&sortBy=id&sortOrder=ASC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "id"
+								},
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								}
+							]
+						},
+						"description": "Obtiene todas las ciudades. Requiere autenticación."
+					},
+					"response": []
+				},
+				{
+					"name": "Get City by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1125"
+								}
+							]
+						},
+						"description": "Obtiene una ciudad por su ID. Requiere autenticación."
+					},
+					"response": []
+				},
+				{
+					"name": "Search City by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities/search?name=a&sortBy=name&sortOrder=ASC&page=1&limit=6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "a"
+								},
+								{
+									"key": "sortBy",
+									"value": "name"
+								},
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "6"
+								}
+							]
+						},
+						"description": "Busca personas por nombre o apellido. Requiere rol ADMIN o MODERATOR."
+					},
+					"response": []
+				},
+				{
+					"name": "Update City (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Villa María Updated\",\n    \"latitude\": -32.403101252999,\n    \"longitude\": -63.236630163218,\n    \"provinceId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2083"
+								}
+							]
+						},
+						"description": "Reemplaza una ciudad. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Update City (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Villa María Patched\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2083"
+								}
+							]
+						},
+						"description": "Actualiza parcialmente una ciudad. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete City",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2083"
+								}
+							]
+						},
+						"description": "Elimina una ciudad. Requiere rol ADMIN."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de ciudades."
+		},
+		{
+			"name": "Provinces",
+			"item": [
+				{
+					"name": "Create Province",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Córdoba\",\n    \"latitude\": -32.1447993873859,\n    \"longitude\": -63.801973466573,\n    \"countryId\": 1 \n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/provinces",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces"
+							]
+						},
+						"description": "Crea una nueva provincia. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Provinces",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/provinces?page=1&limit=5&sortBy=id&sortOrder=ASC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "sortBy",
+									"value": "id"
+								},
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								}
+							]
+						},
+						"description": "Obtiene todas las provincias. Requiere autenticación. `loadRelations=true` es opcional."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Province by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/provinces/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Obtiene una provincia por su ID. Requiere autenticación. `loadRelations=true` es opcional."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Province by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/provinces/search?name=a&sortBy=name&sortOrder=ASC&page=1&limit=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "a"
+								},
+								{
+									"key": "sortBy",
+									"value": "name"
+								},
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Busca personas por nombre o apellido. Requiere rol ADMIN o MODERATOR."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Province (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Córdoba Updated\",\n    \"latitude\": -32.144993873859,\n    \"longitude\": -63.80973466573,\n    \"countryId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/provinces/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Reemplaza una provincia. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Province (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Córdoba Patched\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/provinces/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Actualiza parcialmente una provincia. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Province",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/provinces/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"provinces",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "25"
+								}
+							]
+						},
+						"description": "Elimina una provincia. Requiere rol ADMIN."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de provincias."
+		},
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "Create Country",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Uruguay\",\n    \"code\": \"UR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries"
+							]
+						},
+						"description": "Crea un nuevo país. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Countries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries"
+							]
+						},
+						"description": "Obtiene todos los países. Requiere autenticación. `loadProvinces=true` es opcional."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Obtiene un país por su ID. Requiere autenticación. `loadProvinces=true` es opcional."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Country by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countries/search?name=a&sortBy=name&sortOrder=ASC&page=1&limit=6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "a"
+								},
+								{
+									"key": "sortBy",
+									"value": "name"
+								},
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "6"
+								}
+							]
+						},
+						"description": "Busca personas por nombre o apellido. Requiere rol ADMIN o MODERATOR."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Country (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Uruguay Updated\",\n    \"code\": \"URG\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Reemplaza un país. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Country (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Uruguay Patched\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Actualiza parcialmente un país. Requiere rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Country",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						},
+						"description": "Elimina un país. Requiere rol ADMIN."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para la gestión de países."
+		},
+		{
+			"name": "Seed",
+			"item": [
+				{
+					"name": "Siembra",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"adminPassword\": \"Gm%47376754\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/seed/trigger",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"seed",
+								"trigger"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001",
+			"type": "string"
+		}
+	]
+}

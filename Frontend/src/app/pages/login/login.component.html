@@ -1,0 +1,31 @@
+<div class="container" id="login-container">
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="card p-4" style="width: 400px;">
+      <h2 class="text-center mb-1">Iniciar Sesión</h2>
+      <p class="text-center mb-4">Iniciar sesión para continuar</p>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="email" class="form-label">EMAIL</label>
+          <input type="email" class="form-control" id="email" formControlName="email">
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-danger mt-1">
+            <small *ngIf="loginForm.get('email')?.errors?.['required']">El email es requerido.</small>
+            <small *ngIf="loginForm.get('email')?.errors?.['email']">Debe ser un email válido.</small>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="form-label">PASSWORD</label>
+          <input type="password" class="form-control" id="password" formControlName="password">
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+            class="text-danger mt-1">
+            <small *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es requerida.</small>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Iniciar</button>
+      </form>
+      <div class="text-center mt-4">
+        <p class="text-center mb-2">¿Aún no tenés una cuenta?</p>
+        <a class="btn btn-secondary w-100" routerLink="/registro">Registrarse</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">Inicio</h1>
+  </div>
+
+  <div *ngIf="canShowAdminButtons" class="d-flex justify-content-center gap-3">
+    <button class="btn btn-primary" routerLink="/CrearPersona" [queryParams]="{ from: '/home' }">Crear Persona</button>
+    <button class="btn btn-primary" routerLink="/TablaDeDatos">Tabla de Datos</button>
+  </div>
+</div>

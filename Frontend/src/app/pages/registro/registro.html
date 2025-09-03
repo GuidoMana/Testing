@@ -1,0 +1,70 @@
+<div class="container" id="registro-container">
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="card p-4">
+            <h2 class="text-center mb-1">Registrar Usuario</h2>
+            <p class="text-center mb-4">¿Ya estás registrado? <a href="/login">Iniciar sesión</a></p>
+            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+                <div class="row gx-5">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="NOMBRE" class="form-label">NOMBRE</label>
+                            <input type="text" class="form-control" id="NOMBRE" formControlName="firstName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="APELLIDO" class="form-label">APELLIDO</label>
+                            <input type="text" class="form-control" id="APELLIDO" formControlName="lastName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="EMAIL" class="form-label">EMAIL</label>
+                            <input type="email" class="form-control" id="EMAIL" formControlName="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="CONTRASEÑA" class="form-label">CONTRASEÑA</label>
+                            <input type="password" class="form-control" id="CONTRASEÑA" formControlName="password">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="FECHA DE NACIMIENTO" class="form-label">FECHA DE NACIMIENTO</label>
+                            <input type="date" class="form-control" id="FECHA DE NACIMIENTO"
+                                formControlName="birthDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="PAIS" class="form-label">PAIS</label>
+                            <select class="form-select" id="PAIS" formControlName="countryId">
+                                <option [ngValue]="null" disabled>Seleccione un país</option>
+                                <option *ngFor="let country of countries" [ngValue]="country.id">
+                                    {{ country.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="PROVINCIA" class="form-label">PROVINCIA</label>
+                            <select class="form-select" id="PROVINCIA" formControlName="provinceId"
+                                [disabled]="provinces.length === 0">
+                                <option [ngValue]="null" disabled>Seleccione una provincia</option>
+                                <option *ngFor="let province of provinces" [ngValue]="province.id">
+                                    {{ province.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="LOCALIDAD" class="form-label">LOCALIDAD</label>
+                            <select class="form-select" id="LOCALIDAD" formControlName="cityId"
+                                [disabled]="cities.length === 0">
+                                <option [ngValue]="null" disabled>Seleccione una localidad</option>
+                                <option *ngFor="let city of cities" [ngValue]="city.id">
+                                    {{ city.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary w-50"
+                        [disabled]="registroForm.invalid">Registrarse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
