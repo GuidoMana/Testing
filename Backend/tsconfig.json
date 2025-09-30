@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "node16", 
     "declaration": false,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,14 +14,17 @@
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "baseUrl": "./",
+    "isolatedModules": true,
     "paths": {
       "@/*": [
         "src/*"
       ]
-    }
+    },
+    "types": ["jest", "node"]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules",

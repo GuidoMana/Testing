@@ -1,0 +1,22 @@
+# docker-compose.test.yml
+
+services:
+  # Define el servicio de nuestra base de datos DE PRUEBAS
+  postgres_db_test:
+    image: postgres:15
+    container_name: nestjs_postgres_db_test # Nombre de contenedor diferente
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestjs_test
+    ports:
+      # Mapeamos a un puerto DIFERENTE en tu máquina para evitar conflictos
+      # Tu máquina (host) -> Contenedor
+      - "5433:5432"
+    volumes:
+      # Usamos un volumen DIFERENTE para los datos de prueba
+      - postgres-test-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-test-data:

@@ -7,8 +7,20 @@ docker volume ls
 docker ps
 docker-compose down --volumes
 
+npm run db:dev:up
+npm run start:dev
 npm run migration:generate
 npm run migration:run
 npm run create:admin
 nest start
 ng serve 
+
+npm run test
+npm run test:watch
+npm run test:cov
+npm run db:test:down
+npm run test:e2e
+npm run test:e2e:cov
+npm run db:test:up
+
+npx jest --testPathPattern=city.service.spec.ts --coverage --coverageDirectory=coverage

@@ -1,9 +1,23 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
+    "^.+\\.(t|j)s$": ["ts-jest", {
+      "tsconfig": "tsconfig.json"
+    }]
+  },
+  "coverageDirectory": "./coverage-e2e",
+  "coverageProvider": "v8",
+  "collectCoverageFrom": [
+    "src/**/*.ts",
+    "!src/**/*.module.ts",
+    "!src/**/*.dto.ts",
+    "!src/**/*.entity.ts",
+    "!src/main.ts"
+  ],
+  "maxWorkers": 1,
+  "detectOpenHandles": true,
+  "forceExit": true
 }

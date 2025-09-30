@@ -160,19 +160,23 @@ export class CountriesService {
 
   async updatePatch(id: number, updateDto: UpdateCountryDto): Promise<CountryResponseDto> {
     this.logger.debug(`Actualizando (PATCH) país ID: ${id}`);
-    const countryToUpdate = await this.countryRepository.preload({ id, ...updateDto });
-    if (!countryToUpdate) {
-      this.logger.warn(`País ID ${id} no encontrado para PATCH.`);
+    const original = await this.countryRepository.findOne({ where: { id } });
+    if (!original) {
       throw new NotFoundException(`País con ID ${id} no encontrado.`);
     }
 
-    if (updateDto.name && updateDto.name !== countryToUpdate.name) {
+    if (updateDto.name && updateDto.name !== original.name) {
       const existing = await this.countryRepository.findOne({ where: { name: updateDto.name, id: Not(id) } });
       if (existing) throw new ConflictException(`País con nombre '${updateDto.name}' ya existe.`);
     }
-    if (updateDto.code && updateDto.code !== countryToUpdate.code) {
+    if (updateDto.code && updateDto.code !== original.code) {
       const existing = await this.countryRepository.findOne({ where: { code: updateDto.code, id: Not(id) } });
       if (existing) throw new ConflictException(`País con código '${updateDto.code}' ya existe.`);
+    }
+
+    const countryToUpdate = await this.countryRepository.preload({ id, ...updateDto });
+    if (!countryToUpdate) {
+      throw new NotFoundException(`País con ID ${id} no encontrado.`);
     }
 
     const updatedCountry = await this.countryRepository.save(countryToUpdate);
