@@ -86,6 +86,7 @@ export class ProvincesService {
     });
     if (existingNominal) {
       this.logger.warn(`Conflicto nominal: Provincia '${createProvinceDto.name}' ya existe en país '${country.name}' (coords difieren).`);
+      throw new ConflictException(`Provincia '${createProvinceDto.name}' ya existe en país '${country.name}'.`);
     }
 
     const province = this.provinceRepository.create({

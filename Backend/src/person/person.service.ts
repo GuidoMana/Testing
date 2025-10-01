@@ -14,13 +14,10 @@ import { PersonResponseDto, CityResponse, ProvinceResponse, CountryResponse } fr
 
 function adjustDateForTimezone(dateString: string | Date): Date | null {
   if (!dateString) return null;
-  // Si ya es un objeto Date, no hacemos nada. Si es string, lo ajustamos.
   if (typeof dateString !== 'string') return dateString;
-  // Creamos la fecha, que JS interpretará como UTC a medianoche.
   const date = new Date(dateString);
-  // Obtenemos el desfase de la zona horaria del servidor en minutos (ej: para GMT-3 es 180).
   const timezoneOffset = date.getTimezoneOffset();
-  // Añadimos ese desfase a la fecha para contrarrestar la conversión UTC y mantener el día correcto.
+
   return new Date(date.getTime() + (timezoneOffset * 60000));
 }
 
@@ -200,6 +197,19 @@ export class PersonService {
     let person = await this.personRepository.findOneBy({ id });
     if (!person) {
       throw new NotFoundException(`Persona con ID ${id} no encontrada.`);
+    }
+
+    // Validar campos obligatorios para PUT
+    if (!updateDto.firstName || !updateDto.lastName || !updateDto.email || !updateDto.role) {
+      throw new BadRequestException('Faltan campos obligatorios para actualización completa (PUT).');
+    }
+
+    // Validar que el email no esté en uso por otra persona
+    const existingPersonWithEmail = await this.personRepository.findOne({
+      where: { email: updateDto.email, id: Not(id) }
+    });
+    if (existingPersonWithEmail) {
+      throw new ConflictException(`El email '${updateDto.email}' ya está en uso por otra persona.`);
     }
 
     Object.assign(person, updateDto);

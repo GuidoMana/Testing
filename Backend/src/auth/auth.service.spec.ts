@@ -5,15 +5,14 @@ import { AuthService } from './auth.service';
 import { PersonService } from '../person/person.service';
 import { JwtService } from '@nestjs/jwt';
 import { CitiesService } from '../city/city.service';
-import { UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import { UnauthorizedException, ConflictException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { RegisterPersonDto } from './dto/register-person.dto';
 import * as bcrypt from 'bcrypt';
 
-// Mock de bcrypt para no hashear contraseñas reales en los tests
 jest.mock('bcrypt', () => ({
-  ...jest.requireActual('bcrypt'), // Importa el resto de bcrypt real
-  hash: jest.fn(() => Promise.resolve('hashed-password')), // Simula siempre el mismo hash
-  compare: jest.fn(), // Simula la comparación, se definirá en cada test
+  ...jest.requireActual('bcrypt'), 
+  hash: jest.fn(() => Promise.resolve('hashed-password')), 
+  compare: jest.fn(), 
 }));
 
 describe('AuthService', () => {
@@ -49,7 +48,6 @@ describe('AuthService', () => {
       ],
     }).compile();
 
-    // Obtenemos las instancias del módulo de prueba
     authService = module.get<AuthService>(AuthService);
     personsService = module.get(PersonService);
     citiesService = module.get(CitiesService);
@@ -103,14 +101,14 @@ describe('AuthService', () => {
       await expect(authService.register(registerDto)).rejects.toThrow(BadRequestException);
     });
 
-    it('debería lanzar BadRequestException si personsService.create falla', async () => {
+    it('debería lanzar InternalServerErrorException si personsService.create falla', async () => {
       personsService.findByEmailForAuth.mockResolvedValue(null);
       // @ts-ignore
       citiesService.findOneByNameAndProvinceName.mockResolvedValue({ id: 1 });
       const dbError = new Error('Error de base de datos simulado');
       personsService.create.mockRejectedValue(dbError);
 
-      await expect(authService.register(registerDto)).rejects.toThrow(BadRequestException);
+      await expect(authService.register(registerDto)).rejects.toThrow(InternalServerErrorException);
     });
   });
 

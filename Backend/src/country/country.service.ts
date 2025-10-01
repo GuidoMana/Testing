@@ -35,18 +35,14 @@ export class CountriesService {
 
     const existingByName = await this.countryRepository.findOne({ where: { name } });
     if (existingByName) {
-      this.logger.warn(`País con nombre '${name}' ya existe.`);
-      const reloadedExisting = await this.countryRepository.findOne({ where: { id: existingByName.id } });
-      if (!reloadedExisting) throw new NotFoundException('Error al recargar país existente después de conflicto.');
-      return returnEntity ? reloadedExisting : this.mapToResponseDto(reloadedExisting);
+      this.logger.log(`País con nombre '${name}' ya existe, retornando existente.`);
+      return returnEntity ? existingByName : this.mapToResponseDto(existingByName);
     }
     if (code) {
       const existingByCode = await this.countryRepository.findOne({ where: { code } });
       if (existingByCode) {
-        this.logger.warn(`País con código '${code}' ya existe.`);
-        const reloadedExisting = await this.countryRepository.findOne({ where: { id: existingByCode.id } });
-        if (!reloadedExisting) throw new NotFoundException('Error al recargar país existente después de conflicto.');
-        return returnEntity ? reloadedExisting : this.mapToResponseDto(reloadedExisting);
+        this.logger.log(`País con código '${code}' ya existe, retornando existente.`);
+        return returnEntity ? existingByCode : this.mapToResponseDto(existingByCode);
       }
     }
 

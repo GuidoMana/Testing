@@ -1,5 +1,5 @@
 // src/auth/auth.service.ts
-import { Injectable, UnauthorizedException, Logger, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger, ConflictException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { PersonService } from '../person/person.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -98,7 +98,7 @@ export class AuthService {
           error,
         );
       }
-      throw new BadRequestException('No se pudo completar el registro, por favor intente de nuevo.');
+      throw new InternalServerErrorException('No se pudo completar el registro debido a un error interno.');
     }
   }
 

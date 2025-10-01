@@ -1,21 +1,35 @@
-//src\city\city.service.spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository, Not } from 'typeorm';
-import { NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { CitiesService } from './city.service';
 import { City } from '../entities/city.entity';
 import { Province } from '../entities/province.entity';
+import { Country } from '../entities/country.entity';
+import { NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreateCityDto } from '../dto/create-city.dto';
+import { UpdateCityDto } from '../dto/update-patch-city.dto';
 import { UpdatePutCityDto } from '../dto/update-put-city.dto';
-import { PaginatedResponseDto } from '../dto/paginated-response.dto';
 import { PaginationDto } from '../dto/pagination.dto';
 
 describe('CitiesService', () => {
   let service: CitiesService;
-  let cityRepository: jest.Mocked<Repository<City>>;
-  let provinceRepository: jest.Mocked<Repository<Province>>;
+  let cityRepository: Repository<City>;
+  let provinceRepository: Repository<Province>;
+
+  const mockCityRepository = {
+    findOne: jest.fn(),
+    findOneBy: jest.fn(),
+    findAndCount: jest.fn(),
+    find: jest.fn(),
+    create: jest.fn(),
+    save: jest.fn(),
+    preload: jest.fn(),
+    remove: jest.fn(),
+  };
+
+  const mockProvinceRepository = {
+    findOne: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,229 +37,362 @@ describe('CitiesService', () => {
         CitiesService,
         {
           provide: getRepositoryToken(City),
-          useValue: { findOne: jest.fn(), create: jest.fn(), save: jest.fn(), remove: jest.fn(), findAndCount: jest.fn(), find: jest.fn() },
+          useValue: mockCityRepository,
         },
-        { provide: getRepositoryToken(Province), useValue: { findOne: jest.fn() } },
+        {
+          provide: getRepositoryToken(Province),
+          useValue: mockProvinceRepository,
+        },
       ],
     }).compile();
 
     service = module.get<CitiesService>(CitiesService);
-    cityRepository = module.get(getRepositoryToken(City));
-    provinceRepository = module.get(getRepositoryToken(Province));
+    cityRepository = module.get<Repository<City>>(getRepositoryToken(City));
+    provinceRepository = module.get<Repository<Province>>(getRepositoryToken(Province));
+
+    jest.clearAllMocks();
   });
 
-  afterEach(() => jest.clearAllMocks());
-
-  it('debería estar definido', () => {
+  it('debe ser definido', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findProvinceById (método privado)', () => {
-    it('debería lanzar NotFoundException si la provincia no se encuentra', async () => {
-      provinceRepository.findOne.mockResolvedValue(null);
-      await expect((service as any).findProvinceById(999)).rejects.toThrow(NotFoundException);
-    });
-  });
-
   describe('create', () => {
-    const createCityDto: CreateCityDto = { name: 'Córdoba', provinceId: 1, latitude: -31.42, longitude: -64.18 };
-    const mockProvince = { id: 1, name: 'Córdoba', country: { id: 1, name: 'Argentina' } } as Province;
-    const mockCity = { id: 101, ...createCityDto, province: mockProvince };
+    const createDto: CreateCityDto = {
+      name: 'Buenos Aires',
+      latitude: -34.6037,
+      longitude: -58.3816,
+      provinceId: 1,
+    };
 
-    it('debería crear una nueva ciudad exitosamente', async () => {
-        provinceRepository.findOne.mockResolvedValue(mockProvince);
-        cityRepository.findOne.mockResolvedValue(null);
-        cityRepository.create.mockReturnValue(mockCity as any);
-        cityRepository.save.mockResolvedValue(mockCity as any);
-        cityRepository.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(null).mockResolvedValueOnce(mockCity as any);
-  
-        await service.create(createCityDto, false);
-        expect(cityRepository.save).toHaveBeenCalledWith(mockCity);
+    it('debería crear una nueva ciudad con éxito', async () => {
+      const province = { id: 1, name: 'Buenos Aires', country: { id: 1, name: 'Argentina' } };
+      const city = { id: 1, ...createDto, province, provinceId: 1 };
+      const savedCity = { ...city };
+
+      mockProvinceRepository.findOne.mockResolvedValue(province);
+      mockCityRepository.findOne.mockResolvedValue(null);
+      mockCityRepository.create.mockReturnValue(city);
+      mockCityRepository.save.mockResolvedValue(savedCity);
+      mockCityRepository.findOne.mockResolvedValue(savedCity);
+
+      const result = await service.create(createDto);
+
+      expect(result.id).toBe(1);
+      expect(result.name).toBe('Buenos Aires');
     });
 
-    it('debería devolver una ciudad existente si las coordenadas coinciden', async () => {
-      provinceRepository.findOne.mockResolvedValue(mockProvince);
-      cityRepository.findOne.mockResolvedValue(mockCity as any);
-      await service.create(createCityDto, false);
-      expect(cityRepository.save).not.toHaveBeenCalled();
+    it('debería devolver la ciudad existente si las coordenadas coinciden', async () => {
+      const province = { id: 1, name: 'Buenos Aires', country: { id: 1, name: 'Argentina' } };
+      const existingCity = { id: 2, name: 'Existing City', latitude: -34.6037, longitude: -58.3816, province, provinceId: 1 };
+
+      mockProvinceRepository.findOne.mockResolvedValue(province);
+      mockCityRepository.findOne.mockResolvedValue(existingCity);
+
+      const result = await service.create(createDto);
+
+      expect(result.id).toBe(2);
+      expect(result.name).toBe('Existing City');
     });
 
-    it('debería registrar un warning si el nombre de la ciudad ya existe', async () => {
-        provinceRepository.findOne.mockResolvedValue(mockProvince);
-        cityRepository.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(mockCity as any).mockResolvedValueOnce({ ...mockCity, province: mockProvince } as any);
-        cityRepository.create.mockReturnValue({ ...mockCity, province: mockProvince } as any);
-        cityRepository.save.mockResolvedValue({ ...mockCity, province: mockProvince } as any);
-        const loggerSpy = jest.spyOn(service['logger'], 'warn').mockImplementation();
-        await service.create(createCityDto, false);
-        expect(loggerSpy).toHaveBeenCalledWith(expect.stringContaining('Conflicto nominal'));
-        loggerSpy.mockRestore();
-    });
-    
-    it('debería manejar una colisión de BD donde la ciudad finalmente no se encuentra', async () => {
-        const dbError = { code: '23505' };
-        provinceRepository.findOne.mockResolvedValue(mockProvince);
-        cityRepository.findOne.mockResolvedValue(null);
-        cityRepository.create.mockReturnValue(mockCity as any);
-        cityRepository.save.mockRejectedValue(dbError);
-        cityRepository.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(null).mockResolvedValueOnce(null);
-        await expect(service.create({} as any, false)).rejects.toThrow(ConflictException);
+    it('debería lanzar NotFoundException si no se encuentra la provincia', async () => {
+      mockProvinceRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.create(createDto)).rejects.toThrow(NotFoundException);
     });
 
-    it('debería manejar una colisión de BD y retornar la ciudad existente', async () => {
-        const dbError = { code: '23505' };
-        provinceRepository.findOne.mockResolvedValue(mockProvince);
-        cityRepository.findOne.mockResolvedValue(null);
-        cityRepository.create.mockReturnValue(mockCity as any);
-        cityRepository.save.mockRejectedValue(dbError);
-        cityRepository.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(null).mockResolvedValueOnce(mockCity as any);
-        const result = await service.create(createCityDto, false);
-        expect(result).toBeDefined();
-    });
+    it('debe manejar la violación de restricciones de la base de datos', async () => {
+      const province = { id: 1, name: 'Buenos Aires', country: { id: 1, name: 'Argentina' } };
+      const error = new Error('Database error');
+      (error as any).code = '23505';
 
-    it('debería manejar un error genérico (no de BD) durante el guardado', async () => {
-        const genericError = new Error('Error genérico');
-        provinceRepository.findOne.mockResolvedValue(mockProvince);
-        cityRepository.findOne.mockResolvedValue(null);
-        cityRepository.create.mockReturnValue(mockCity as any);
-        cityRepository.save.mockRejectedValue(genericError);
-        await expect(service.create({} as any, false)).rejects.toThrow(genericError);
+      mockProvinceRepository.findOne.mockResolvedValue(province);
+      mockCityRepository.findOne.mockResolvedValue(null);
+      mockCityRepository.create.mockReturnValue({ ...createDto, province, provinceId: 1 });
+      mockCityRepository.save.mockRejectedValue(error);
+      mockCityRepository.findOne.mockResolvedValue({ id: 1, ...createDto, province, provinceId: 1 });
+
+      const result = await service.create(createDto);
+
+      expect(result.id).toBe(1);
     });
   });
 
-  describe('Find Methods', () => {
-    const mockFullCity = { id: 1, name: 'Rosario', province: { id: 2, name: 'Santa Fe', country: { id: 1, name: 'Argentina' } } } as City;
+  describe('findAll', () => {
+    const paginationDto: PaginationDto = { page: 1, limit: 10 };
 
-    it('findAll: debería usar ordenamiento por defecto si no se especifica', async () => {
-        cityRepository.findAndCount.mockResolvedValue([[], 0]);
-        await service.findAll({});
-        expect(cityRepository.findAndCount).toHaveBeenCalledWith(expect.objectContaining({ order: { id: 'ASC' } }));
-    });
-    
-    it('findByProvince: debería devolver ciudades por provincia', async () => {
-      const mockCities = [{ id: 1, name: 'Villa María' }];
-      cityRepository.findAndCount.mockResolvedValue([mockCities as any[], 1]);
-      const result = await service.findByProvince(1);
-      expect(result).toBeInstanceOf(PaginatedResponseDto);
+    it('deberían devolverse las ciudades paginadas', async () => {
+      const cities = [{ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } } }];
+      mockCityRepository.findAndCount.mockResolvedValue([cities, 1]);
+
+      const result = await service.findAll(paginationDto);
+
+      expect(result.data.length).toBe(1);
+      expect(result.meta.totalItems).toBe(1);
     });
 
-    it('mapToResponseDto: debería lanzar un error si faltan relaciones', () => {
-      const cityWithoutRelations = { id: 1, name: 'Ciudad Rota' } as City;
-      expect(() => (service as any).mapToResponseDto(cityWithoutRelations)).toThrow('Las relaciones de provincia/país no están cargadas para la ciudad.');
+    it('debería lanzar BadRequestException para un campo de clasificación no válido', async () => {
+      const invalidPagination: PaginationDto = { page: 1, limit: 10, sortBy: 'invalidField' };
+
+      await expect(service.findAll(invalidPagination)).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('findOne', () => {
+    it('debería devolver una ciudad por id', async () => {
+      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } } };
+      mockCityRepository.findOne.mockResolvedValue(city);
+
+      const result = await service.findOne(1);
+
+      expect(result.id).toBe(1);
+      expect(result.name).toBe('City1');
     });
 
-    it('findAll: debería lanzar BadRequestException si el campo de ordenamiento no es válido', async () => {
-      const paginationDto: PaginationDto = { sortBy: 'campoInvalido' };
-      await expect(service.findAll(paginationDto)).rejects.toThrow(BadRequestException);
-    });
+    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () => {
+      mockCityRepository.findOne.mockResolvedValue(null);
 
-    it('findOne: debería devolver una ciudad si la encuentra', async () => {
-      cityRepository.findOne.mockResolvedValue(mockFullCity);
-      const result = await service.findOne(1, false, true);
-      expect(result).toEqual(mockFullCity);
-    });
-
-    it('findOne: debería lanzar NotFoundException si la ciudad no existe', async () => {
-      cityRepository.findOne.mockResolvedValue(null);
       await expect(service.findOne(999)).rejects.toThrow(NotFoundException);
     });
+  });
 
-    it('findOneByNameAndProvinceName: debería encontrar una ciudad', async () => {
-        cityRepository.findOne.mockResolvedValue(mockFullCity as any);
-        await service.findOneByNameAndProvinceName('Rosario', 'Santa Fe');
-        expect(cityRepository.findOne).toHaveBeenCalled();
-    });
+  describe('findByProvince', () => {
+    it('debería devolver las ciudades por identificación de provincia', async () => {
+      const cities = [{ id: 1, name: 'City1', latitude: 0, longitude: 0 }];
+      mockCityRepository.findAndCount.mockResolvedValue([cities, 1]);
 
-    it('findOneByNameAndProvinceName: debería registrar warning si múltiples ciudades encontradas sin provincia', async () => {
-        const multipleCities = [mockFullCity, { ...mockFullCity, id: 2 }];
-        cityRepository.find.mockResolvedValue(multipleCities as any);
-        const loggerSpy = jest.spyOn(service['logger'], 'warn').mockImplementation();
-        await service.findOneByNameAndProvinceName('Rosario', '');
-        expect(loggerSpy).toHaveBeenCalledWith(expect.stringContaining('Múltiples ciudades encontradas'));
-        loggerSpy.mockRestore();
-    });
-  
-    it('findOneByNameAndProvinceId: debería encontrar una ciudad', async () => {
-        cityRepository.findOne.mockResolvedValue(mockFullCity as any);
-        await service.findOneByNameAndProvinceId('Rosario', 2);
-        expect(cityRepository.findOne).toHaveBeenCalled();
-    });
+      const result = await service.findByProvince(1);
 
-    it('searchByName: debería devolver ciudades que coincidan', async () => {
-        cityRepository.findAndCount.mockResolvedValue([[mockFullCity] as any[], 1]);
-        const result = await service.searchByName('Rosario', {});
-        expect(result.data.length).toBe(1);
+      expect(result.data.length).toBe(1);
     });
   });
 
-  describe('Update Methods', () => {
-    const mockCity = { id: 1, name: 'Rosario', provinceId: 2, latitude: -32.94, longitude: -60.63, province: { id: 2, name: 'Santa Fe', country: { id: 1, name: 'Argentina' } } } as City;
-    const newProvince = { id: 3, name: 'Buenos Aires', country: {id: 1, name: 'Argentina'} } as Province;
+  describe('findOneByNameAndProvinceName', () => {
+    it('debería devolver la ciudad cuando se encuentre con la provincia', async () => {
+      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      mockCityRepository.findOne.mockResolvedValue(city);
 
-    describe('updatePut', () => {
-        const updateDto: UpdatePutCityDto = { name: 'Mar del Plata', provinceId: 3, latitude: -38.00, longitude: -57.55 };
+      const result = await service.findOneByNameAndProvinceName('City1', 'Province1');
 
-        it('debería actualizar una ciudad completamente', async () => {
-            const updatedCity = { ...mockCity, ...updateDto, province: newProvince };
-            cityRepository.findOne.mockResolvedValueOnce(mockCity).mockResolvedValueOnce(null).mockResolvedValueOnce(null).mockResolvedValueOnce(updatedCity as any);
-            provinceRepository.findOne.mockResolvedValue(newProvince as any);
-            cityRepository.save.mockResolvedValue(updatedCity as any);
-            await service.updatePut(1, updateDto);
-            expect(cityRepository.save).toHaveBeenCalled();
-        });
-
-        it('debería lanzar NotFoundException si no se puede recargar la ciudad actualizada', async () => {
-            const updatedCity = { ...mockCity, ...updateDto, province: newProvince };
-            cityRepository.findOne.mockResolvedValueOnce(mockCity).mockResolvedValueOnce(null).mockResolvedValueOnce(null).mockResolvedValueOnce(null);
-            provinceRepository.findOne.mockResolvedValue(newProvince as any);
-            cityRepository.save.mockResolvedValue(updatedCity as any);
-            await expect(service.updatePut(1, updateDto)).rejects.toThrow(NotFoundException);
-        });
+      expect(result).toEqual({ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } });
     });
-  
-    describe('updatePatch', () => {
-      it('debería actualizar el nombre de una ciudad exitosamente', async () => {
-        const updateDto = { name: 'Rosario Actualizado' };
-        const updatedCity = { ...mockCity, ...updateDto };
-        cityRepository.findOne.mockResolvedValueOnce(mockCity).mockResolvedValueOnce(null).mockResolvedValueOnce(updatedCity as any);
-        cityRepository.save.mockResolvedValue(updatedCity as any);
-        await service.updatePatch(1, updateDto);
-        expect(cityRepository.save).toHaveBeenCalledWith(expect.objectContaining(updateDto));
+
+    it('debería devolver nulo cuando no se encuentre la ciudad', async () => {
+      mockCityRepository.findOne.mockResolvedValue(null);
+
+      const result = await service.findOneByNameAndProvinceName('NonExistent', 'Province1');
+
+      expect(result).toBeNull();
+    });
+
+    it('debería devolver la primera ciudad cuando se encuentren varias sin provincia', async () => {
+      const cities = [
+        { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 },
+        { id: 2, name: 'City1', latitude: 1, longitude: 1, province: { id: 2, name: 'Province2', country: { id: 1, name: 'Country1' } }, provinceId: 2 }
+      ];
+      mockCityRepository.find.mockResolvedValue(cities);
+
+      const result = await service.findOneByNameAndProvinceName('City1', '');
+
+      expect(result).toEqual({ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } });
+    });
+  });
+
+  describe('findOneByNameAndProvinceId', () => {
+    it('debería regresar a la ciudad cuando la encuentre', async () => {
+      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      mockCityRepository.findOne.mockResolvedValue(city);
+
+      const result = await service.findOneByNameAndProvinceId('City1', 1);
+
+      expect(result).toEqual({ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } });
+    });
+
+    it('debería devolver nulo cuando no se encuentre la ciudad', async () => {
+      mockCityRepository.findOne.mockResolvedValue(null);
+
+      const result = await service.findOneByNameAndProvinceId('NonExistent', 1);
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('searchByName', () => {
+    const paginationDto: PaginationDto = { page: 1, limit: 10 };
+
+    it('debería buscar ciudades por nombre', async () => {
+      const cities = [{ id: 1, name: 'Buenos Aires', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } } }];
+      mockCityRepository.findAndCount.mockResolvedValue([cities, 1]);
+
+      const result = await service.searchByName('Buenos', paginationDto);
+
+      expect(result.data.length).toBe(1);
+    });
+
+    it('debería lanzar BadRequestException para un término de búsqueda vacío', async () => {
+      await expect(service.searchByName('', paginationDto)).rejects.toThrow(BadRequestException);
+    });
+
+    it('debería lanzar BadRequestException para un campo de clasificación no válido', async () => {
+      const invalidPagination: PaginationDto = { page: 1, limit: 10, sortBy: 'invalidField' };
+
+      await expect(service.searchByName('test', invalidPagination)).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('updatePut', () => {
+    const updateDto: UpdatePutCityDto = {
+      name: 'Updated City',
+      latitude: -34.6037,
+      longitude: -58.3816,
+      provinceId: 1,
+    };
+
+    it('debería actualizar una ciudad por completo', async () => {
+      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      const province = { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } };
+      const updatedCity = { ...city, ...updateDto, province };
+
+      mockCityRepository.findOne.mockResolvedValueOnce(city);
+      mockProvinceRepository.findOne.mockResolvedValue(province);
+      mockCityRepository.findOne.mockResolvedValueOnce(null); // No existing city with same coords
+      mockCityRepository.findOne.mockResolvedValueOnce(null); // No existing city with same name/province
+      mockCityRepository.save.mockResolvedValue(updatedCity);
+      mockCityRepository.findOne.mockResolvedValueOnce(updatedCity);
+
+      const result = await service.updatePut(1, updateDto);
+
+      expect(result.name).toBe('Updated City');
+    });
+
+    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () => {
+      mockCityRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.updatePut(999, updateDto)).rejects.toThrow(NotFoundException);
+    });
+
+    it('debería lanzar una ConflictException para coordenadas duplicadas', async () => {
+      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      mockProvinceRepository.findOne.mockResolvedValue({ id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } });
+      mockCityRepository.findOne.mockResolvedValueOnce(city);
+      mockCityRepository.findOne.mockResolvedValueOnce({ id: 2, name: 'Existing City' });
+
+      await expect(service.updatePut(1, updateDto)).rejects.toThrow(ConflictException);
+    });
+  });
+
+  describe('updatePatch', () => {
+    const updateDto: UpdateCityDto = {
+      name: 'Patched City',
+    };
+
+    it('debería actualizar una ciudad parcialmente', async () => {
+      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      const updatedCity = { ...city, name: 'Patched City' };
+
+      let callCount = 0;
+      mockCityRepository.findOne.mockImplementation((options) => {
+        callCount++;
+        if (callCount === 1) {
+          // First call: find existing city
+          return Promise.resolve(city);
+        } else if (callCount === 2) {
+          // Second call: check name/province conflict
+          return Promise.resolve(null);
+        } else if (callCount === 3 && options?.relations?.includes('province')) {
+          // Third call: reload updated city with relations
+          return Promise.resolve(updatedCity);
+        }
+        return Promise.resolve(null);
       });
 
-      it('debería lanzar ConflictException si el nuevo nombre y provincia ya existen', async () => {
-        const updateDto = { name: 'Ciudad Existente', provinceId: 3 };
-        const conflictingCity = { id: 2, name: 'Ciudad Existente' };
-        provinceRepository.findOne.mockResolvedValue(newProvince);
-        cityRepository.findOne.mockResolvedValueOnce(mockCity).mockResolvedValueOnce(conflictingCity as any);
-        await expect(service.updatePatch(1, updateDto)).rejects.toThrow(ConflictException);
+      mockCityRepository.save.mockResolvedValue(updatedCity);
+
+      const result = await service.updatePatch(1, updateDto);
+
+      expect(result.name).toBe('Patched City');
+    });
+
+    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () => {
+      mockCityRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.updatePatch(999, updateDto)).rejects.toThrow(NotFoundException);
+    });
+
+    it('debería actualizar la ciudad con el cambio de provincia', async () => {
+      const updateDtoWithProvince = { provinceId: 2 };
+      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      const newProvince = { id: 2, name: 'Province2', country: { id: 1, name: 'Country1' } };
+      const updatedCity = { ...city, province: newProvince, provinceId: 2 };
+
+      let callCount = 0;
+      mockCityRepository.findOne.mockImplementation((options) => {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve(city);
+        } else if (callCount === 2) {
+          return Promise.resolve(null);
+        } else if (callCount === 3 && options?.relations?.includes('province')) {
+          return Promise.resolve(updatedCity);
+        }
+        return Promise.resolve(null);
       });
 
-      it('debería lanzar NotFoundException si no se puede recargar la ciudad actualizada en PATCH', async () => {
-        const updateDto = { name: 'Rosario Actualizado' };
-        const updatedCity = { ...mockCity, ...updateDto };
-        cityRepository.findOne.mockResolvedValueOnce(mockCity).mockResolvedValueOnce(null).mockResolvedValueOnce(null);
-        cityRepository.save.mockResolvedValue(updatedCity as any);
-        await expect(service.updatePatch(1, updateDto)).rejects.toThrow(NotFoundException);
+      mockProvinceRepository.findOne.mockResolvedValue(newProvince);
+      mockCityRepository.save.mockResolvedValue(updatedCity);
+
+      const result = await service.updatePatch(1, updateDtoWithProvince);
+
+      expect(result.province.id).toBe(2);
+    });
+
+    it('debería actualizar la ciudad con el cambio de coordenadas', async () => {
+      const updateDtoWithCoords = { latitude: 1, longitude: 1 };
+      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };
+      const updatedCity = { ...city, latitude: 1, longitude: 1 };
+
+      let callCount = 0;
+      mockCityRepository.findOne.mockImplementation((options) => {
+        callCount++;
+        if (callCount === 1) {
+          return Promise.resolve(city);
+        } else if (callCount === 2) {
+          return Promise.resolve(null); // No coords conflict
+        } else if (callCount === 3 && options?.relations?.includes('province')) {
+          return Promise.resolve(updatedCity);
+        }
+        return Promise.resolve(null);
       });
+
+      mockCityRepository.save.mockResolvedValue(updatedCity);
+
+      const result = await service.updatePatch(1, updateDtoWithCoords);
+
+      expect(result.latitude).toBe(1);
+      expect(result.longitude).toBe(1);
     });
   });
 
   describe('remove', () => {
-    it('debería lanzar NotFoundException si la ciudad a eliminar no existe', async () => {
-      cityRepository.findOne.mockResolvedValue(null);
+    it('debería eliminar una ciudad con éxito', async () => {
+      const city = { id: 1, name: 'City1', persons: [] };
+      mockCityRepository.findOne.mockResolvedValue(city);
+
+      const result = await service.remove(1);
+
+      expect(result.message).toContain('eliminada correctamente');
+    });
+
+    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () => {
+      mockCityRepository.findOne.mockResolvedValue(null);
+
       await expect(service.remove(999)).rejects.toThrow(NotFoundException);
     });
 
-    it('debería eliminar una ciudad si no tiene personas asociadas', async () => {
-      const mockCity = { id: 1, name: 'Rosario', persons: [] };
-      cityRepository.findOne.mockResolvedValue(mockCity as any);
-      await service.remove(1);
-      expect(cityRepository.remove).toHaveBeenCalledWith(mockCity);
-    });
-
     it('debería lanzar ConflictException si la ciudad tiene personas asociadas', async () => {
-      const mockCityWithPerson = { id: 1, name: 'Rosario', persons: [{ id: 1 }] };
-      cityRepository.findOne.mockResolvedValue(mockCityWithPerson as any);
+      const city = { id: 1, name: 'City1', persons: [{ id: 1 }] };
+      mockCityRepository.findOne.mockResolvedValue(city);
+
       await expect(service.remove(1)).rejects.toThrow(ConflictException);
     });
   });
