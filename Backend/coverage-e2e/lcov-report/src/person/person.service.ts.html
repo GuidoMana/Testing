@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.04% </span>
+                <span class="strong">77.01% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>201/248</span>
+                <span class='fraction'>201/261</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.04% </span>
+                <span class="strong">77.01% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>201/248</span>
+                <span class='fraction'>201/261</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -310,7 +310,20 @@
 <a name='L245'></a><a href='#L245'>245</a>
 <a name='L246'></a><a href='#L246'>246</a>
 <a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -505,6 +518,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -758,6 +784,19 @@ export class PersonService {
 <span class="cstat-no" title="statement not covered" >      throw new NotFoundException(`Persona con ID ${id} no encontrada.`);</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
 <span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Validar campos obligatorios para PUT</span>
+<span class="cstat-no" title="statement not covered" >    if (!updateDto.firstName || !updateDto.lastName || !updateDto.email || !updateDto.role) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new BadRequestException('Faltan campos obligatorios para actualización completa (PUT).');</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Validar que el email no esté en uso por otra persona</span>
+<span class="cstat-no" title="statement not covered" >    const existingPersonWithEmail = await this.personRepository.findOne({</span>
+<span class="cstat-no" title="statement not covered" >      where: { email: updateDto.email, id: Not(id) }</span>
+<span class="cstat-no" title="statement not covered" >    });</span>
+<span class="cstat-no" title="statement not covered" >    if (existingPersonWithEmail) {</span>
+<span class="cstat-no" title="statement not covered" >      throw new ConflictException(`El email '${updateDto.email}' ya está en uso por otra persona.`);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >    Object.assign(person, updateDto);</span>
 <span class="cstat-no" title="statement not covered" >    const updatedPerson = await this.personRepository.save(person);</span>
 <span class="cstat-no" title="statement not covered" >    const reloadedPerson = await this.personRepository.findOne({ where: { id: updatedPerson.id }, relations: this.defaultRelations });</span>
@@ -811,7 +850,7 @@ export class PersonService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-01T12:01:18.908Z
+                at 2025-10-01T13:52:52.951Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

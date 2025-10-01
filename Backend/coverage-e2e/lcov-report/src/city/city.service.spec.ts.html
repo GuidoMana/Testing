@@ -916,7 +916,7 @@
 <span class="cstat-no" title="statement not covered" >    jest.clearAllMocks();</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  it('should be defined', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  it('debe ser definido', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    expect(service).toBeDefined();</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -928,7 +928,7 @@
 <span class="cstat-no" title="statement not covered" >      provinceId: 1,</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should create a new city successfully', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería crear una nueva ciudad con éxito', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const province = { id: 1, name: 'Buenos Aires', country: { id: 1, name: 'Argentina' } };</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, ...createDto, province, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      const savedCity = { ...city };</span>
@@ -945,7 +945,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.name).toBe('Buenos Aires');</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return existing city if coordinates match', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver la ciudad existente si las coordenadas coinciden', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const province = { id: 1, name: 'Buenos Aires', country: { id: 1, name: 'Argentina' } };</span>
 <span class="cstat-no" title="statement not covered" >      const existingCity = { id: 2, name: 'Existing City', latitude: -34.6037, longitude: -58.3816, province, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -958,13 +958,13 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.name).toBe('Existing City');</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw NotFoundException if province not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar NotFoundException si no se encuentra la provincia', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockProvinceRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.create(createDto)).rejects.toThrow(NotFoundException);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should handle database constraint violation', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debe manejar la violación de restricciones de la base de datos', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const province = { id: 1, name: 'Buenos Aires', country: { id: 1, name: 'Argentina' } };</span>
 <span class="cstat-no" title="statement not covered" >      const error = new Error('Database error');</span>
 <span class="cstat-no" title="statement not covered" >      (error as any).code = '23505';</span>
@@ -984,7 +984,7 @@
 <span class="cstat-no" title="statement not covered" >  describe('findAll', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    const paginationDto: PaginationDto = { page: 1, limit: 10 };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return paginated cities', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('deberían devolverse las ciudades paginadas', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const cities = [{ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } } }];</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findAndCount.mockResolvedValue([cities, 1]);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -994,7 +994,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.meta.totalItems).toBe(1);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw BadRequestException for invalid sort field', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar BadRequestException para un campo de clasificación no válido', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const invalidPagination: PaginationDto = { page: 1, limit: 10, sortBy: 'invalidField' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.findAll(invalidPagination)).rejects.toThrow(BadRequestException);</span>
@@ -1002,7 +1002,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('findOne', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return a city by id', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver una ciudad por id', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(city);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1012,7 +1012,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.name).toBe('City1');</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw NotFoundException if city not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.findOne(999)).rejects.toThrow(NotFoundException);</span>
@@ -1020,7 +1020,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('findByProvince', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return cities by province id', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver las ciudades por identificación de provincia', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const cities = [{ id: 1, name: 'City1', latitude: 0, longitude: 0 }];</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findAndCount.mockResolvedValue([cities, 1]);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1031,7 +1031,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('findOneByNameAndProvinceName', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return city when found with province', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver la ciudad cuando se encuentre con la provincia', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(city);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1040,7 +1040,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result).toEqual({ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } });</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return null when city not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver nulo cuando no se encuentre la ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      const result = await service.findOneByNameAndProvinceName('NonExistent', 'Province1');</span>
@@ -1048,7 +1048,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result).toBeNull();</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return first city when multiple found without province', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver la primera ciudad cuando se encuentren varias sin provincia', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const cities = [</span>
 <span class="cstat-no" title="statement not covered" >        { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 },</span>
 <span class="cstat-no" title="statement not covered" >        { id: 2, name: 'City1', latitude: 1, longitude: 1, province: { id: 2, name: 'Province2', country: { id: 1, name: 'Country1' } }, provinceId: 2 }</span>
@@ -1062,7 +1062,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('findOneByNameAndProvinceId', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return city when found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería regresar a la ciudad cuando la encuentre', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(city);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1071,7 +1071,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result).toEqual({ id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } });</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return null when city not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver nulo cuando no se encuentre la ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      const result = await service.findOneByNameAndProvinceId('NonExistent', 1);</span>
@@ -1083,7 +1083,7 @@
 <span class="cstat-no" title="statement not covered" >  describe('searchByName', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    const paginationDto: PaginationDto = { page: 1, limit: 10 };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should search cities by name', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería buscar ciudades por nombre', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const cities = [{ id: 1, name: 'Buenos Aires', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } } }];</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findAndCount.mockResolvedValue([cities, 1]);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1092,11 +1092,11 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.data.length).toBe(1);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw BadRequestException for empty search term', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar BadRequestException para un término de búsqueda vacío', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.searchByName('', paginationDto)).rejects.toThrow(BadRequestException);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw BadRequestException for invalid sort field', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar BadRequestException para un campo de clasificación no válido', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const invalidPagination: PaginationDto = { page: 1, limit: 10, sortBy: 'invalidField' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.searchByName('test', invalidPagination)).rejects.toThrow(BadRequestException);</span>
@@ -1111,7 +1111,7 @@
 <span class="cstat-no" title="statement not covered" >      provinceId: 1,</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should update a city fully', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería actualizar una ciudad por completo', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      const province = { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } };</span>
 <span class="cstat-no" title="statement not covered" >      const updatedCity = { ...city, ...updateDto, province };</span>
@@ -1128,13 +1128,13 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.name).toBe('Updated City');</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw NotFoundException if city not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.updatePut(999, updateDto)).rejects.toThrow(NotFoundException);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw ConflictException for duplicate coordinates', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar una ConflictException para coordenadas duplicadas', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      mockProvinceRepository.findOne.mockResolvedValue({ id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } });</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValueOnce(city);</span>
@@ -1149,7 +1149,7 @@
 <span class="cstat-no" title="statement not covered" >      name: 'Patched City',</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should update a city partially', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería actualizar una ciudad parcialmente', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      const updatedCity = { ...city, name: 'Patched City' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1176,13 +1176,13 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.name).toBe('Patched City');</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw NotFoundException if city not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.updatePatch(999, updateDto)).rejects.toThrow(NotFoundException);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should update city with province change', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería actualizar la ciudad con el cambio de provincia', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const updateDtoWithProvince = { provinceId: 2 };</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      const newProvince = { id: 2, name: 'Province2', country: { id: 1, name: 'Country1' } };</span>
@@ -1194,7 +1194,7 @@
 <span class="cstat-no" title="statement not covered" >        if (callCount === 1) {</span>
 <span class="cstat-no" title="statement not covered" >          return Promise.resolve(city);</span>
 <span class="cstat-no" title="statement not covered" >        } else if (callCount === 2) {</span>
-<span class="cstat-no" title="statement not covered" >          return Promise.resolve(null); // No conflict</span>
+<span class="cstat-no" title="statement not covered" >          return Promise.resolve(null);</span>
 <span class="cstat-no" title="statement not covered" >        } else if (callCount === 3 &amp;&amp; options?.relations?.includes('province')) {</span>
 <span class="cstat-no" title="statement not covered" >          return Promise.resolve(updatedCity);</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
@@ -1209,7 +1209,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.province.id).toBe(2);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should update city with coordinates change', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería actualizar la ciudad con el cambio de coordenadas', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const updateDtoWithCoords = { latitude: 1, longitude: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'Old City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1', country: { id: 1, name: 'Country1' } }, provinceId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      const updatedCity = { ...city, latitude: 1, longitude: 1 };</span>
@@ -1237,7 +1237,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('remove', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should remove a city successfully', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería eliminar una ciudad con éxito', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'City1', persons: [] };</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(city);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1246,13 +1246,13 @@
 <span class="cstat-no" title="statement not covered" >      expect(result.message).toContain('eliminada correctamente');</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw NotFoundException if city not found', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar NotFoundException si no se encuentra la ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(null);</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(service.remove(999)).rejects.toThrow(NotFoundException);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw ConflictException if city has associated persons', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar ConflictException si la ciudad tiene personas asociadas', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const city = { id: 1, name: 'City1', persons: [{ id: 1 }] };</span>
 <span class="cstat-no" title="statement not covered" >      mockCityRepository.findOne.mockResolvedValue(city);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -1267,7 +1267,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-01T12:01:18.908Z
+                at 2025-10-01T13:52:52.951Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

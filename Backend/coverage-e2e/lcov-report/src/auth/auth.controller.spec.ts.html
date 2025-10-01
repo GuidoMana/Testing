@@ -477,7 +477,7 @@
 <span class="cstat-no" title="statement not covered" >    jest.clearAllMocks();</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  it('should be defined', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  it('debe ser definido', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    expect(controller).toBeDefined();</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -492,7 +492,7 @@
 <span class="cstat-no" title="statement not covered" >      birthDate: '1990-01-01',</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should register a new user successfully', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería registrar un nuevo usuario exitosamente', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { message: 'Usuario registrado exitosamente', userId: 1 };</span>
 <span class="cstat-no" title="statement not covered" >      mockAuthService.register.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -509,7 +509,7 @@
 <span class="cstat-no" title="statement not covered" >      password: 'Password123!',</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should login successfully and set cookie', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debe iniciar sesión correctamente y configurar las cookies.', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const authResult = { access_token: 'jwt-token' };</span>
 <span class="cstat-no" title="statement not covered" >      mockAuthService.login.mockResolvedValue(authResult);</span>
 <span class="cstat-no" title="statement not covered" >      mockConfigService.get.mockReturnValue('1h');</span>
@@ -528,7 +528,7 @@
 <span class="cstat-no" title="statement not covered" >      });</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should set secure cookie in production', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería establecer una cookie segura en producción', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockAuthService.login.mockResolvedValue({ access_token: 'jwt-token' });</span>
 <span class="cstat-no" title="statement not covered" >      mockConfigService.get.mockImplementation((key: string) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        if (key === 'JWT_EXPIRES_IN') return '1h';</span>
@@ -551,7 +551,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('logout', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should clear cookie and return success message', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería borrar las cookies y devolver un mensaje de éxito.', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      mockConfigService.get.mockReturnValue('development');</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      const mockResponse = {</span>
@@ -570,7 +570,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('status', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return authentication status', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver el estado de autenticación', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const mockUser = { id: 1, email: 'test@example.com' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      const result = controller.status(mockUser);</span>
@@ -580,7 +580,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('getProfile', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return user profile', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver el perfil de usuario', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const mockUser = { id: 1, email: 'test@example.com', firstName: 'Test' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      const result = controller.getProfile(mockUser);</span>
@@ -590,32 +590,32 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('parseExpiresIn', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should handle numeric string (e.g. "3600") and return milliseconds', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debe manejar cadenas numéricas y devolver milisegundos.', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = (controller as any).parseExpiresIn('3600');</span>
 <span class="cstat-no" title="statement not covered" >      expect(result).toBe(3600000);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return 1 hour in milliseconds if string is invalid', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debe devolver 1 hora en milisegundos si la cadena no es válida', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = (controller as any).parseExpiresIn('invalid-string');</span>
 <span class="cstat-no" title="statement not covered" >      expect(result).toBe(3600 * 1000);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should handle "d" unit for days', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería manejar la unidad "d" para días', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = (controller as any).parseExpiresIn('2d');</span>
 <span class="cstat-no" title="statement not covered" >      expect(result).toBe(2 * 24 * 60 * 60 * 1000);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should handle "h" unit for hours', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería manejar la unidad "h" para horas', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = (controller as any).parseExpiresIn('2h');</span>
 <span class="cstat-no" title="statement not covered" >      expect(result).toBe(2 * 60 * 60 * 1000);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should handle "m" unit for minutes', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería manejar la unidad "m" para minutos', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = (controller as any).parseExpiresIn('30m');</span>
 <span class="cstat-no" title="statement not covered" >      expect(result).toBe(30 * 60 * 1000);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should handle "s" unit for seconds', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería manejar la unidad "s" para segundos', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = (controller as any).parseExpiresIn('90s');</span>
 <span class="cstat-no" title="statement not covered" >      expect(result).toBe(90 * 1000);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
@@ -628,7 +628,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-01T12:01:18.908Z
+                at 2025-10-01T13:52:52.951Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

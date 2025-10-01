@@ -454,7 +454,7 @@
 <span class="cstat-no" title="statement not covered" >    jest.clearAllMocks();</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  it('should be defined', () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  it('debe ser definido', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    expect(controller).toBeDefined();</span>
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -466,7 +466,7 @@
 <span class="cstat-no" title="statement not covered" >      provinceId: 1,</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should create a new city', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería crear una nueva ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { id: 1, name: 'Buenos Aires', latitude: -34.6037, longitude: -58.3816, province: { id: 1, name: 'Buenos Aires' } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.create.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -480,7 +480,7 @@
 <span class="cstat-no" title="statement not covered" >  describe('findAll', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    const paginationDto: PaginationDto = { page: 1, limit: 10 };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should return all cities with pagination', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver todas las ciudades con paginación', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { data: [{ id: 1, name: 'City1' }], meta: { totalItems: 1, totalPages: 1, currentPage: 1 } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.findAll.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -492,7 +492,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('findCitiesByProvince', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return cities by province id', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver las ciudades por identificación de provincia', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { data: [{ id: 1, name: 'City1' }], meta: { totalItems: 1, totalPages: 1, currentPage: 1 } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.findByProvince.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -506,7 +506,7 @@
 <span class="cstat-no" title="statement not covered" >  describe('searchByName', () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    const paginationDto: PaginationDto = { page: 1, limit: 10, name: 'Buenos' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should search cities by name', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería buscar ciudades por nombre', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { data: [{ id: 1, name: 'Buenos Aires' }], meta: { totalItems: 1, totalPages: 1, currentPage: 1 } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.searchByName.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -516,7 +516,7 @@
 <span class="cstat-no" title="statement not covered" >      expect(response).toEqual(result);</span>
 <span class="cstat-no" title="statement not covered" >    });</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should throw BadRequestException for empty search term', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería lanzar BadRequestException para un término de búsqueda vacío', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const emptyPagination: PaginationDto = { page: 1, limit: 10, name: '' };</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >      await expect(controller.searchByName(emptyPagination)).rejects.toThrow(BadRequestException);</span>
@@ -524,7 +524,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('findOne', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should return a city by id', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería devolver una ciudad por id', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { id: 1, name: 'City1', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.findOne.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -543,7 +543,7 @@
 <span class="cstat-no" title="statement not covered" >      provinceId: 1,</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should update a city fully', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería actualizar una ciudad por completo', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { id: 1, name: 'Updated City', latitude: -34.6037, longitude: -58.3816, province: { id: 1, name: 'Province1' } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.updatePut.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -559,7 +559,7 @@
 <span class="cstat-no" title="statement not covered" >      name: 'Patched City',</span>
 <span class="cstat-no" title="statement not covered" >    };</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    it('should update a city partially', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('debería actualizar una ciudad parcialmente', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { id: 1, name: 'Patched City', latitude: 0, longitude: 0, province: { id: 1, name: 'Province1' } };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.updatePatch.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -571,7 +571,7 @@
 <span class="cstat-no" title="statement not covered" >  });</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  describe('remove', () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    it('should remove a city', async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    it('deberia eliminar una ciudad', async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      const result = { message: 'Ciudad con ID 1 eliminada correctamente.' };</span>
 <span class="cstat-no" title="statement not covered" >      mockCitiesService.remove.mockResolvedValue(result);</span>
 <span class="cstat-no" title="statement not covered" ></span>
@@ -589,7 +589,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-01T12:01:18.908Z
+                at 2025-10-01T13:52:52.951Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
